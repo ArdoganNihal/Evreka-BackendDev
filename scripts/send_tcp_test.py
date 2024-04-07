@@ -16,6 +16,6 @@ def send_tcp_message(route, service_point, mrf, parcel, gps):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect(("localhost", 8888))
         s.sendall(message_json.encode())
-        print("Message sent:", message_json)
+        print("Message sent:", message_json.encode())
 
-send_tcp_message("route1", "service_point1", "mrf1", "parcel1", "gps_coordinates1")
+send_tcp_message("route1", "service_point1", "mrf1", "parcel1", "ge")
