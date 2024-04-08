@@ -25,6 +25,24 @@ This project is designed to handle location data from IoT devices using a robust
 ### Installation
 
 1. Clone the repository:
+
    ```sh
    git clone https://github.com/yourgithub/iot-location-service.git
    ```
+
+2. Navigate to the project directory:
+   ```sh
+   cd Evreka-BackendDev
+   pip install -r requirements.txt
+   source venv/bin/activate
+   ```
+3. Start the PostgreSQL database and RabbitMQ service.
+4. ```sh
+   uvicorn app.main:app --reload
+   ```
+
+5. Testing
+
+```sh
+pytest
+```
