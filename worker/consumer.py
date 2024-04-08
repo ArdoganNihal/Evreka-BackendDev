@@ -3,10 +3,18 @@ import aio_pika
 import httpx
 import json
 import logging
+from dotenv import load_dotenv
+import os
+
 
 # Loglama yapılandırması
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("worker_consumer")
+
+# .env dosyasını yükle
+load_dotenv()
+
+
 
 async def send_to_fastapi(data_dict):
     async with httpx.AsyncClient() as client:
@@ -21,7 +29,7 @@ async def send_to_fastapi(data_dict):
         logger.info(f"Data sent to FastAPI, response status: {response.status_code}")
 
 async def consume_message():
-    rabbitmq_url = "amqp://guest:guest@localhost/"
+    rabbitmq_url = os.getenv("RABBITMQ_URL")
     connection = await aio_pika.connect_robust(rabbitmq_url)
     
     async with connection:
