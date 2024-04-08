@@ -1,20 +1,28 @@
-import asyncio
 import pytest
-
-async def tcp_client(message: str, host="localhost", port=8888):
-    reader, writer = await asyncio.open_connection(host, port)
-    writer.write(message.encode())
-    await writer.drain()
-    writer.close()
-    await writer.wait_closed()
-    print("TCP client sent:", message)
+import asyncio
+import json
 
 @pytest.mark.asyncio
-async def test_tcp_server():
-    # Gönderilecek test mesajı
-    test_message = "Test message"
-    # TCP istemcisi aracılığıyla sunucuya mesaj gönder
-    await tcp_client(test_message)
-    # NOT: Bu test, sunucunun mesajı aldığını doğrulamaz.
-    # Gerçek bir test ortamında, RabbitMQ'ya mesajın başarıyla gönderilip gönderilmediğini kontrol etmek için
-    # ek mantık veya araçlar kullanmanız gerekir.
+async def test_tcp_server_receives_json_message():
+    # TCP sunucunuza bağlanıp mesaj gönderen asenkron bir istemci fonksiyonu
+    async def send_tcp_message(host, port, message):
+        reader, writer = await asyncio.open_connection(host, port)
+        writer.write(message.encode())
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+
+    # Test için JSON mesajı
+    test_message = json.dumps({
+        "route": "route1",
+        "service_point": "service_point1",
+        "mrf": "mrf1",
+        "parcel": "parcel1",
+        "gps": "g"
+    })
+
+    # TCP sunucunuza mesaj gönderin
+    await send_tcp_message("localhost", 8888, test_message)
+
+    # Bu örnekte, sunucunun mesajı aldığını doğrulamak için ek bir mekanizma yoktur.
+    # Gerçek bir test senaryosunda, sunucunun mesajı aldığına dair bir doğrulama yapmanız gerekir.
