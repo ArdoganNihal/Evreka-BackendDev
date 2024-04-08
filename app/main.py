@@ -5,7 +5,12 @@ from .api import endpoints
 from tcp_server import start_tcp_server
 from worker import consume_message
 import asyncio
+import logging
 
+
+# Loglama yapılandırması
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Veritabanı tablolarını oluştur
 Base.metadata.create_all(bind=engine)
@@ -19,11 +24,11 @@ async def app_startup():
     # TCP Server ve Consumer'ı başlat
     task1 = asyncio.create_task(start_tcp_server())
     task2 = asyncio.create_task(consume_message())
-    print("Uygulama başlıyor...")
+    logger.info("Uygulama başlıyor...")  # Log mesajı
 
 async def app_shutdown():
     # Gerekirse, uygulama kapatılırken temizlik işlemleri yapın
-    print("Uygulama kapanıyor...")
+    logger.info("Uygulama kapanıyor...")  # Log mesajı
 
 @app.on_event("startup")
 async def startup_event():
