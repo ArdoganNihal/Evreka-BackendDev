@@ -9,7 +9,7 @@ This project is designed to handle location data from IoT devices using a robust
 - **PostgreSQL Database**: Stores device information and location data, providing a robust solution for data persistence.
 - **RESTful API**: Offers endpoints for creating, deleting, and listing devices, as well as listing location history by device and retrieving the last known location for all devices.
 - **Logging**: Comprehensive logging of activities and errors for troubleshooting and monitoring purposes.
-- **Documentation**: Includes clear and readable documentation for easy understanding and maintenance.
+- **Documentation**: Includes clear and readable documentation for easy understanding and maintenance. http://localhost:8000/docs/
 - **Testing**: Comes with examples of unit and integration tests to ensure the reliability of the service.
 
 ## Getting Started
@@ -46,3 +46,25 @@ This project is designed to handle location data from IoT devices using a robust
 ```sh
 pytest
 ```
+
+## API Endpoints
+
+### The RESTful API provides the following endpoints:
+
+- **POST /device_data/**: Create a new device with location data.
+- **DELETE /device_data/{device_id}**: Delete a device by its ID.
+- **GET /device_data/**: List all devices.
+- **GET /device_data/{device_id}**: Get location history for a specific device.
+- **GET /latest_device_locations/**: Get the last known location for all devices.
+
+## Architecture Overview
+
+The IoT Location Service is designed with scalability and reliability in mind. The architecture includes:
+
+- **TCP Server**: Handles high-throughput data intake from IoT devices in real-time.
+- **Message Queue**: Acts as a buffer to ensure data is processed efficiently without loss, even during high load.
+- **Database**: Ensures safe storage of device and location data, supporting complex queries for analytics.
+
+## Contributing
+
+Contributions are welcome! For major changes, please open an issue first to discuss what you would like to change. Ensure to update tests as appropriate.
