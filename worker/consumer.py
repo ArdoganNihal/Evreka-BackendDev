@@ -40,8 +40,6 @@ async def consume_message():
                     await send_to_fastapi(data_dict)
                 except json.JSONDecodeError as e:
                     logger.error(f"JSON decoding error: {e}")
-                    # Burada hatalı veri için uygun bir işlem yapabilirsiniz.
-                    # Örneğin, loglama yapmak veya bir hata kuyruğuna eklemek.
 
 if __name__ == "__main__":
     asyncio.run(consume_message())

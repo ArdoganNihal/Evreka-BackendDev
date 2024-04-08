@@ -6,19 +6,26 @@ from .. import schemas
 from . import crud
 from ..database import get_db
 
-# Logger'ı yapılandırın
+# Logger'ı yapılandır
 logger = logging.getLogger("uvicorn.info")
 
 router = APIRouter()
 
-@router.post("/device_data/", response_model=schemas.DeviceData)
+@router.post("/device_data/", response_model=schemas.DeviceData,
+             summary="Create Device Data",
+             description="Creates a new device data entry with GPS and other details.",
+             response_description="The created device data.")
 def create_device_data(device_data: schemas.DeviceDataCreate, db: Session = Depends(get_db)):
     logger.info(f"Creating device data: {device_data}")
     created_data = crud.create_device_data(db=db, device_data=device_data)
     logger.info(f"Device data created with ID: {created_data.id}")
     return created_data
 
-@router.delete("/device_data/{device_data_id}", status_code=204)
+@router.delete("/device_data/{device_data_id}", status_code=204,
+               summary="Delete Device Data",
+               description="Deletes a device data entry based on the provided ID.",
+               responses={204: {"description": "Device Data deleted successfully"},
+                          404: {"description": "DeviceData not found"}})
 def delete_device_data(device_data_id: int, db: Session = Depends(get_db)):
     logger.info(f"Deleting device data with ID: {device_data_id}")
     success = crud.delete_device_data(db=db, device_data_id=device_data_id)
@@ -28,7 +35,10 @@ def delete_device_data(device_data_id: int, db: Session = Depends(get_db)):
     logger.info(f"Device data deleted successfully: ID {device_data_id}")
     return {"message": "DeviceData deleted successfully"}
 
-@router.get("/device_data/{device_data_id}", response_model=schemas.DeviceData)
+@router.get("/device_data/{device_data_id}", response_model=schemas.DeviceData,
+            summary="Read Device Data",
+            description="Reads device data for a given ID.",
+            responses={404: {"description": "DeviceData not found"}})
 def read_device_data(device_data_id: int, db: Session = Depends(get_db)):
     logger.info(f"Fetching device data for ID: {device_data_id}")
     db_device_data = crud.get_device_data(db=db, device_data_id=device_data_id)
@@ -37,20 +47,28 @@ def read_device_data(device_data_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="DeviceData not found")
     return db_device_data
 
-@router.get("/device_data/", response_model=List[schemas.DeviceData])
+@router.get("/device_data/", response_model=List[schemas.DeviceData],
+            summary="Read All Device Data",
+            description="Reads all device data entries from the database.")
 def read_all_device_data(db: Session = Depends(get_db)):
     logger.info("Fetching all device data")
     all_data = crud.get_all_device_data(db=db)
     return all_data
 
-@router.get("/device_data_history/{device_id}", response_model=List[schemas.DeviceData])
+@router.get("/device_data_history/{device_id}", response_model=List[schemas.DeviceData],
+            summary="Device Location History",
+            description="Fetches location history for a specific device.",
+            responses={404: {"description": "Device not found"}})
 def read_device_location_history(device_id: int, db: Session = Depends(get_db)):
     logger.info(f"Fetching device location history for device ID: {device_id}")
     history = crud.get_device_location_history(db=db, device_data_id=device_id)
     return history
 
-@router.get("/latest_device_locations/", response_model=List[schemas.DeviceData])
+@router.get("/latest_device_locations/", response_model=List[schemas.DeviceData],
+            summary="Latest Locations for All Devices",
+            description="Fetches the latest location for all devices.")
 def read_latest_location_for_all_devices(db: Session = Depends(get_db)):
     logger.info("Fetching latest location for all devices")
     latest_locations = crud.get_latest_location_for_all_devices(db=db)
+    print(latest_locations)
     return latest_locations
