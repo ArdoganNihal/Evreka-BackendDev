@@ -14,7 +14,7 @@ async def test_consume_message(mock_send_to_fastapi, mock_connect_robust):
         "service_point": "service_point1", 
         "mrf": "mrf1", 
         "parcel": "parcel1", 
-        "gps": "g"
+        "gps": ["gps1", "gps2", "gps3"]  # GPS verilerini bir liste olarak güncelle
     })
     
     mock_queue = AsyncMock()
@@ -27,7 +27,6 @@ async def test_consume_message(mock_send_to_fastapi, mock_connect_robust):
     mock_connection.channel = AsyncMock(return_value=mock_channel)
     
     mock_connect_robust.return_value = mock_connection
-    print(mock_send_to_fastapi.call_args)
 
     # RabbitMQ'dan mesaj alımını simüle et
     await consume_message()
@@ -38,5 +37,5 @@ async def test_consume_message(mock_send_to_fastapi, mock_connect_robust):
         "service_point": "service_point1", 
         "mrf": "mrf1", 
         "parcel": "parcel1", 
-        "gps": "g"
+        "gps": ["gps1", "gps2", "gps3"]  # GPS verilerini bir liste olarak doğrula
     })

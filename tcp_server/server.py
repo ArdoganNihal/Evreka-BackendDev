@@ -1,6 +1,10 @@
-# tcp_server/server.py
 import asyncio
 import aio_pika
+import logging
+
+# Loglama yapılandırması
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("tcp_server")
 
 async def send_to_rabbitmq(message: str):
     rabbitmq_url = "amqp://guest:guest@localhost/"
@@ -13,18 +17,19 @@ async def send_to_rabbitmq(message: str):
             aio_pika.Message(body=message.encode()),
             routing_key="device_location",
         )
-        print("Message sent to RabbitMQ:", message)
+        logger.info(f"Message sent to RabbitMQ: {message}")
 
 async def handle_client(reader, writer):
     data = await reader.read(100)  # Adjust based on your data size
     message = data.decode()
-    print("Received from TCP:", message)
+    logger.info(f"Received from TCP: {message}")
     
     await send_to_rabbitmq(message)
     writer.close()
 
 async def main():
     server = await asyncio.start_server(handle_client, 'localhost', 8888)
+    logger.info("TCP server is running on localhost:8888")
     await server.serve_forever()
 
 if __name__ == "__main__":
