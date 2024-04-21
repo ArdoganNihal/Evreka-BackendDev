@@ -10,7 +10,7 @@ class DeviceData(Base):
     service_point = Column(String, index=True)
     mrf = Column(String, index=True)
     parcel = Column(String, index=True)
-    gps = Column(JSON)  # GPS verilerini JSON olarak saklıyoruz  # Basitlik adına, GPS verisini bir string olarak saklıyoruz. (Örn: "lat,lon")
+    gps = Column(JSON)  # GPS verilerini JSON olarak saklıyoruz  
 
 # Veritabanı bağlantısı ve session oluşturucu
 DATABASE_URL = "postgresql://postgres:postgres@localhost/devices"
